@@ -8022,7 +8022,6 @@
     <Compile Include="plugins\user\terms\terms.php" />
     <Compile Include="plugins\user\terms\terms.xml" />
     <Compile Include="plugins\index.html" />
-    <Compile Include="script1.php" />
     <Compile Include="templates\beez3\css\general.css" />
     <Compile Include="templates\beez3\css\ie7only.css" />
     <Compile Include="templates\beez3\css\ieonly.css" />
