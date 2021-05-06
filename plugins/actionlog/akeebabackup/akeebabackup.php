@@ -1,22 +1,16 @@
 <?php
 /**
  * @package   akeebabackup
- * @copyright Copyright (c)2006-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2006-2021 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @license   GNU General Public License version 3, or later
  */
 
 use Akeeba\Engine\Platform;
-use FOF30\Container\Container;
+use FOF40\Container\Container;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 
 defined('_JEXEC') || die();
-
-// PHP version check
-if (!version_compare(PHP_VERSION, '7.1.0', '>='))
-{
-	return;
-}
 
 class plgActionlogAkeebabackup extends CMSPlugin
 {
@@ -46,7 +40,7 @@ class plgActionlogAkeebabackup extends CMSPlugin
 		}
 
 		// Load FOF
-		if (!defined('FOF30_INCLUDED') && !@include_once(JPATH_LIBRARIES . '/fof30/include.php'))
+		if (!defined('FOF40_INCLUDED') && !@include_once(JPATH_LIBRARIES . '/fof40/include.php'))
 		{
 			return;
 		}

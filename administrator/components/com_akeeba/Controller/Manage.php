@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   akeebabackup
- * @copyright Copyright (c)2006-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2006-2021 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @license   GNU General Public License version 3, or later
  */
 
@@ -15,8 +15,8 @@ use Akeeba\Backup\Admin\Model\Statistics;
 use Akeeba\Engine\Factory;
 use Akeeba\Engine\Platform;
 use Exception;
-use FOF30\Container\Container;
-use FOF30\Controller\Controller;
+use FOF40\Container\Container;
+use FOF40\Controller\Controller;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
@@ -65,11 +65,12 @@ class Manage extends Controller
 		$filename = null;
 
 		// Check single part files
-		if ((count($allFilenames) == 1) && ($part == -1))
+		$countAllFilenames = $allFilenames === null ? 0 : count($allFilenames);
+		if (($countAllFilenames == 1) && ($part == -1))
 		{
 			$filename = array_shift($allFilenames);
 		}
-		elseif ((count($allFilenames) > 0) && (count($allFilenames) > $part) && ($part >= 0))
+		elseif (($countAllFilenames > 0) && ($countAllFilenames > $part) && ($part >= 0))
 		{
 			$filename = $allFilenames[ $part ];
 		}

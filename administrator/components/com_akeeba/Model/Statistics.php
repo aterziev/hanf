@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   akeebabackup
- * @copyright Copyright (c)2006-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2006-2021 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @license   GNU General Public License version 3, or later
  */
 
@@ -14,10 +14,10 @@ use Akeeba\Backup\Admin\Model\Exceptions\FrozenRecordError;
 use Akeeba\Engine\Factory;
 use Akeeba\Engine\Platform;
 use Exception;
-use FOF30\Container\Container;
-use FOF30\Date\Date;
-use FOF30\Model\DataModel\Exception\RecordNotLoaded;
-use FOF30\Model\Model;
+use FOF40\Container\Container;
+use FOF40\Date\Date;
+use FOF40\Model\DataModel\Exception\RecordNotLoaded;
+use FOF40\Model\Model;
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Factory as JFactory;
 use Joomla\CMS\Filesystem\File;

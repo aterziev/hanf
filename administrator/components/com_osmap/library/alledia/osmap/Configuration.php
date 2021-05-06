@@ -3,7 +3,7 @@
  * @package   OSMap
  * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2007-2014 XMap - Joomla! Vargas - Guillermo Vargas. All rights reserved.
- * @copyright 2016-2020 Joomlashack.com. All rights reserved.
+ * @copyright 2016-2021 Joomlashack.com. All rights reserved.
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of OSMap.
@@ -40,7 +40,7 @@ class Configuration
      */
     protected $settings = null;
 
-    public function __construct(array $settings = array())
+    public function __construct(array $settings = [])
     {
         $this->settings = $settings;
     }
@@ -75,8 +75,8 @@ class Configuration
             $key = $levels[$i];
             if (is_array($value) && isset($value[$key])) {
                 $value = &$value[$key];
-            } elseif (is_object($value) && isset($value->$key)) {
-                $value = $value->$key;
+            } elseif (is_object($value) && isset($value->{$key})) {
+                $value = $value->{$key};
             } else {
                 return $default;
             }
@@ -96,7 +96,7 @@ class Configuration
      * @param mixed  $newValue
      *
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function set($name, $newValue)
     {
@@ -110,7 +110,7 @@ class Configuration
             for ($i = 0; $i < count($keys) - 1; $i++) {
                 $key = $keys[$i];
                 if (empty($tree[$key]) || !is_array($tree[$key])) {
-                    $tree[$key] = array();
+                    $tree[$key] = [];
                 }
                 $tree = &$tree[$key];
             }
@@ -135,7 +135,7 @@ class Configuration
     public function toConfig($key = null)
     {
         if ($key) {
-            return new static($this->get($key, array()));
+            return new static($this->get($key, []));
         }
 
         return clone $this;

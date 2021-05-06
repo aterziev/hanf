@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   akeebabackup
- * @copyright Copyright (c)2006-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2006-2021 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @license   GNU General Public License version 3, or later
  */
 
@@ -16,9 +16,9 @@ use Akeeba\Engine\Factory;
 use Akeeba\Engine\Platform;
 use Akeeba\Engine\Util\Complexify;
 use Akeeba\Engine\Util\RandomValue;
-use FOF30\Database\Installer;
-use FOF30\Download\Download;
-use FOF30\Model\Model;
+use FOF40\Database\Installer;
+use FOF40\Download\Download;
+use FOF40\Model\Model;
 use JLoader;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -267,7 +267,6 @@ class ControlPanel extends Model
 		$this->container->params->set('confwiz_upgrade', 1);
 		$this->container->params->set('siteurl', str_replace('/administrator', '', Uri::base()));
 		$this->container->params->set('jlibrariesdir', Factory::getFilesystemTools()->TranslateWinPath(JPATH_LIBRARIES));
-		$this->container->params->set('jversion', '1.6');
 		$this->container->params->save();
 	}
 
@@ -347,7 +346,6 @@ class ControlPanel extends Model
 		$dbInstaller = new Installer(
 			$this->container->db,
 			JPATH_ADMINISTRATOR . '/components/com_akeeba/sql/xml'
-
 		);
 
 		$dbInstaller->updateSchema();
@@ -708,7 +706,7 @@ class ControlPanel extends Model
 
 		@unlink($checkFilePath);
 
-		if (($folderListing !== false) && (strpos($folderListing, basename($checkFile, '.txt')) !== false))
+		if (!is_null($folderListing) && (strpos($folderListing, basename($checkFile, '.txt')) !== false))
 		{
 			$ret['listFolder'] = true;
 		}

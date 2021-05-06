@@ -1,4 +1,99 @@
 <?php die();?>
+Akeeba Backup 8.0.4
+================================================================================
+# [MEDIUM] Failed backups check would show old failed backups again after visiting Akeeba Backup's Control Panel page
+# [MEDIUM] Backup on Update message was never shown
+# [LOW] JSON API could return additional information around the JSON content when XDebug is enabled
+# [LOW] Backup on Update boolean controls appear inverted (Yes is No and vice-versa)
+
+Akeeba Backup 8.0.3
+================================================================================
+~ Rewritten installer plugin
+~ Converted all tables to InnoDB for better performance
+# [HIGH] Cannot take split archive backups under PHP 8
+# [HIGH] Backup on Update message shown to non-Super Users
+# [HIGH] Latest backup restoration backend menu item didn't work
+# [LOW] Annoying error message, without any real consequence, shown when clicking any feature button before checking the output folder security has completed in the background
+
+Akeeba Backup 8.0.2
+================================================================================
+! Update fails on some hosts which use opcache if the any of our software's installer plugin is enabled, you have gone through the Joomla Control Panel (with the extension updates quickicon plugin enabled) or the Extensions Update page before installing the new version, either as an automatic update or by manual installation (upload & install or install from URL).
+~ Will no longer uninstall FOF 3 even if it's no longer needed due to broken THIRD PARTY extensions using it.
+~ Workaround for Joomla bug which may not install the included FEF version 2 framework completely, leading to the component being broken after the update.
+~ Servers with opcache may report that FOF 4 classes are missing even though they are actually there.
+
+Akeeba Backup 8.0.1
+================================================================================
+! Update could fail on sites with old plugins we have removed years ago still installed
+
+Akeeba Backup 8.0.0
+================================================================================
++ Rewritten with FOF 4
++ Now using FEF 2 with a common JavaScript library across all Akeeba extensions
++ Renamed ViewTemplates to tmpl (Joomla 4 convention, with fallback code for Joomla 3)
++ Yes/No options in the component and plugin options now work correctly under Joomla 4.0 beta 7 and later
+# [HIGH] Dropbox for Business wouldn't work with the new scoped access tokens
+# [HIGH] Dropbox refresh token would disappear after the first refresh, making it impossible to use Dropbox reliably
+
+Akeeba Backup 7.5.2
+================================================================================
++ Rewritten Backup on Update plugin for improved UX (gh-685)
++ Joomla 4: backup profile selection uses Choices.js for easier navigation among many backup profiles
+~ Internals: normalised use JVERSION conditionals
+~ Document Microsoft Edge “sleeping tabs” and workarounds for long-running backups in background browser tabs
+~ Improved CHANGELOG layout in the Control Panel page
+~ Code modernisation: using built-in random_bytes() instead of OpenSSL or mcrypt for random number generation
+# [HIGH] Import from S3: you cannot select .jps files
+# [MEDIUM] Frozen backups toggle wouldn't work on Joomla 4
+# [LOW] Import from S3: invisible breadcrumbs in Dark Mode
+# [LOW] Recommended PHP version was shown as 7.3 instead of 7.4
+# [LOW] Unable to access the component on Joomla 4 when using the PDOMySQL database driver with Site Debug enabled, see https://github.com/joomla/joomla-cms/issues/32019
+
+Akeeba Backup 7.5.1
+================================================================================
++ Post-backup emails can now display the total backup size and the approximate size of each part file
+# [HIGH] The Joomla 4 console plugin could not install due to a bug in Joomla 4's plugins installer code
+# [HIGH] Backup failure to S3 with a PHP Type Error when the Dual Stack option has no value
+# [HIGH] Uploading to Dropbox would fail if you linked your Dropbox account after December 2020
+# [LOW] No list of backup files in the post-backup email when using a post-processing engine
+# [LOW] Manage Remotely Stored Files actions could fail on Box, Dropbox, OneDrive and Google Drive if the access token had expired in the meantime.
+
+Akeeba Backup 7.5.0.1
+================================================================================
+! [HIGH] The Backup on Update plugin can cause the site to fail to load
+
+Akeeba Backup 7.5.0
+================================================================================
+- Dropped support for PHP 7.1.0
++ Dropbox is now using the scoped API access.
++ Amazon S3: Added support for Dual Stack option (use of IPv6 when available)
++ Joomla 4 CLI (joomla.php) support – full CLI client to Akeeba Backup
+~ Add PHP 8.0 in the list of known PHP versions, recommend PHP 7.4 or later
+~ Remove the JPS and ANGIE password fields from the Backup Now page. You can still configure these features in the backup profile's Configuration page.
+# [MEDIUM] PHP 8: fatal error uploading to Amazon S3, CloudFiles
+# [LOW] Using [SITENAME] in a backup archive name resulted in a single dash being output.
+# [LOW] UI elements in the the Files and Folders Exclusion pages would still show native tooltips with HTML tags in them.
+# [HIGH] Joomla 4 beta 6 changes how the session works, breaking everything.
+
+Akeeba Backup 7.4.0.1
+================================================================================
+! Akeeba Backup Core: cannot access the plugin or take a backup because of a PHP error due to an incorrect reference to a Pro-only class.
+# [LOW] Backup failure with an error if you import a profile that uses a post-processing engine created with the Pro version into the Core version which does not have this post-processing engine.
+
+Akeeba Backup 7.4.0
+================================================================================
++ Files and Directories Exclusion: mark folder and file symlinks as such [gh-676]
++ Automatically rewrite the Output Directory using site path variables such as [SITEROOT] for portability [gh-678]
++ Automatically rewrite the Off-site Folders Inclusion using site path variables for portability
++ Remote backup JSON API version 2
++ ANGIE: Added feature to resume restoring the database if an error occurs
+~ Deprecated Upload to pCloud
+~ Removed tooltips from Database Tables Exclusion and Files and Folders Exclusion pages to clean up the UI
+~ Using nullable TIMESTAMP fields instead of zero dates
+# [MEDIUM] Recent Chrome and Chromium-based browsers open OAuth2 windows without opener information, making linking to Google Drive, Dropbox etc impossible without manually copying the tokens (the button causes you to log out of the site)
+# [LOW] Files and Directories Exclusion: the folder up is not clickable / doesn't do anything [gh-675]
+# [LOW] Scheduling information button appears in the Configuration Wizard's finale page in the Core version
+
 Akeeba Backup 7.3.2.1
 ================================================================================
 ! CLI backups broken in version 7.3.2

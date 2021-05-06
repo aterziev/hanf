@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   FOF
- * @copyright Copyright (c)2010-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2010-2021 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @license   GNU General Public License version 2, or later
  */
 
@@ -28,6 +28,7 @@ use Joomla\CMS\Authentication\AuthenticationResponse as JAuthenticationResponse;
 use Joomla\CMS\Cache\Cache as JCache;
 use Joomla\CMS\Document\Document;
 use Joomla\CMS\Document\HtmlDocument;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Factory as JFactory;
 use Joomla\CMS\Language\Language;
 use Joomla\CMS\Log\Log;
@@ -40,6 +41,7 @@ use Joomla\CMS\User\User;
 use Joomla\CMS\User\UserHelper;
 use Joomla\CMS\Version;
 use Joomla\Component\Actionlogs\Administrator\Model\ActionlogModel;
+use Joomla\Event\Event;
 use Joomla\Registry\Registry;
 
 /**
@@ -541,7 +543,44 @@ class Platform extends BasePlatform
 				return [];
 			}
 
-			return $app->triggerEvent($event, $data);
+			// Joomla 3 and 4 have triggerEvent
+			if (method_exists($app, 'triggerEvent'))
+			{
+				return $app->triggerEvent($event, $data);
+			}
+
+			// Joomla 5 (and possibly some 4.x versions) don't have triggerEvent. Go through the Events dispatcher.
+			if (method_exists($app, 'getDispatcher') && class_exists('Joomla\Event\Event'))
+			{
+				try
+				{
+					$dispatcher = $app->getDispatcher();
+				}
+				catch (\UnexpectedValueException $exception)
+				{
+					return [];
+				}
+
+				if ($data instanceof Event)
+				{
+					$eventObject = $data;
+				}
+				elseif (\is_array($data))
+				{
+					$eventObject = new Event($event, $data);
+				}
+				else
+				{
+					throw new \InvalidArgumentException('The plugin data must either be an event or an array');
+				}
+
+				$result = $dispatcher->dispatch($event, $eventObject);
+
+				return !isset($result['result']) || \is_null($result['result']) ? [] : $result['result'];
+			}
+
+			// No viable way to run the plugins :(
+			return [];
 		}
 		else
 		{
@@ -1174,6 +1213,7 @@ class Platform extends BasePlatform
 	 */
 	public function setSessionVar($name, $value = null, $namespace = 'default')
 	{
+		// CLI
 		if ($this->isCli() && !class_exists('FOFApplicationCLI'))
 		{
 			static::$fakeSession->set("$namespace.$name", $value);
@@ -1181,7 +1221,30 @@ class Platform extends BasePlatform
 			return;
 		}
 
-		$this->container->session->set($name, $value, $namespace);
+		// Joomla 3
+		if (version_compare(JVERSION, '3.9999.9999', 'le'))
+		{
+			$this->container->session->set($name, $value, $namespace);
+		}
+
+		// Joomla 4
+		if (empty($namespace))
+		{
+			$this->container->session->set($name, $value);
+
+			return;
+		}
+
+		$registry = $this->container->session->get('registry');
+
+		if (is_null($registry))
+		{
+			$registry = new Registry();
+
+			$this->container->session->set('registry', $registry);
+		}
+
+		$registry->set($namespace . '.' . $name, $value);
 	}
 
 	/**
@@ -1195,12 +1258,34 @@ class Platform extends BasePlatform
 	 */
 	public function getSessionVar($name, $default = null, $namespace = 'default')
 	{
+		// CLI
 		if ($this->isCli() && !class_exists('FOFApplicationCLI'))
 		{
 			return static::$fakeSession->get("$namespace.$name", $default);
 		}
 
-		return $this->container->session->get($name, $default, $namespace);
+		// Joomla 3
+		if (version_compare(JVERSION, '3.9999.9999', 'le'))
+		{
+			return $this->container->session->get($name, $default, $namespace);
+		}
+
+		// Joomla 4
+		if (empty($namespace))
+		{
+			return $this->container->session->get($name, $default);
+		}
+
+		$registry = $this->container->session->get('registry');
+
+		if (is_null($registry))
+		{
+			$registry = new Registry();
+
+			$this->container->session->set('registry', $registry);
+		}
+
+		return $registry->get($namespace . '.' . $name, $default);
 	}
 
 	/**

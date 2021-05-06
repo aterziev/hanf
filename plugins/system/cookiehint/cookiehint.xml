@@ -7,7 +7,7 @@
     <license>GNU/GPL</license>
     <authorEmail>team@reDim.de</authorEmail>
     <authorUrl>http://www.redim.de</authorUrl>
-    <version>1.3.20</version>
+    <version>1.3.23</version>
     <description>PLG_SYSTEM_COOKIEHINT_DESCRIPTION</description>
     <files>
         <filename plugin="cookiehint">cookiehint.php</filename>

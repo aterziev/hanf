@@ -3,7 +3,7 @@
  * @package   OSMap
  * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2007-2014 XMap - Joomla! Vargas - Guillermo Vargas. All rights reserved.
- * @copyright 2016-2020 Joomlashack.com. All rights reserved.
+ * @copyright 2016-2021 Joomlashack.com. All rights reserved.
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of OSMap.
@@ -22,18 +22,19 @@
  * along with OSMap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Alledia\OSMap;
+use Alledia\OSMap\Controller\Admin;
+use Alledia\OSMap\Factory;
 
 defined('_JEXEC') or die();
 
 
-class OSMapControllerSitemaps extends OSMap\Controller\Admin
+class OSMapControllerSitemaps extends Admin
 {
     protected $text_prefix = 'COM_OSMAP_SITEMAP';
 
     public function editItems()
     {
-        $id = OSMap\Factory::getApplication()->input->getInt('id');
+        $id = Factory::getApplication()->input->getInt('id');
 
         $this->redirect('index.php?option=com_osmap&view=sitemapitems&id=' . $id);
     }

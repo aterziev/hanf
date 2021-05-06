@@ -1,3 +1,13 @@
+# 16.07.2020 Version 1.3.23
+- adjustment of the redirect (redirect 301)
+
+# 05.01.2021 Version 1.3.22
+- Fixed poblem with redirect and &amp; 
+
+# 15.10.2020 Version 1.3.21
+- REFERER-Check
+- new language file fi-FI. Thanks to Petteri Korkala
+
 # 05.08.2020 Version 1.3.20
 - added setting for Content-Security-Policy (https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
 

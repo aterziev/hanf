@@ -49,12 +49,27 @@ class FilePathRule extends FormRule
 			return true;
 		}
 
-		// Append the root path
+		// Get the exclude setting from the xml
+		$exclude = (array) explode('|', (string) $element['exclude']);
+
+		// Exclude current folder '.' to be safe from full path disclosure
+		$exclude[] = '.';
+
+		// Check the exclude setting
+		$path = preg_split('/[\/\\\\]/', $value);
+
+		if (in_array(strtolower($path[0]), $exclude) || empty($path[0]))
+		{
+			return false;
+		}
+
+		// Prepend the root path
 		$value = JPATH_ROOT . '/' . $value;
 
+		// Check if $value is a valid path, which includes not allowing to break out of the current path
 		try
 		{
-			$path = Path::check($value);
+			Path::check($value);
 		}
 		catch (\Exception $e)
 		{
@@ -62,6 +77,8 @@ class FilePathRule extends FormRule
 			return false;
 		}
 
-		return $value === $path;
+		// When there are no exception this rule should pass.
+		// See: https://github.com/joomla/joomla-cms/issues/30500#issuecomment-683290162
+		return true;
 	}
 }

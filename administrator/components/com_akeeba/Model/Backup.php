@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   akeebabackup
- * @copyright Copyright (c)2006-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2006-2021 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @license   GNU General Public License version 3, or later
  */
 
@@ -18,9 +18,10 @@ use Closure;
 use DateTimeZone;
 use DirectoryIterator;
 use Exception;
-use FOF30\Date\Date;
-use FOF30\Model\Model;
-use FOF30\Timer\Timer;
+use FOF40\Date\Date;
+use FOF40\Factory\Exception\ModelNotFound;
+use FOF40\Model\Model;
+use FOF40\Timer\Timer;
 use JDatabaseDriver;
 use JLoader;
 use Joomla\CMS\Language\Text;
@@ -130,6 +131,23 @@ class Backup extends Model
 		Factory::nuke();
 		Factory::getLog()->log(LogLevel::DEBUG, " -- Resetting Akeeba Engine factory ($tag.$backupId)");
 		Platform::getInstance()->load_configuration();
+
+		// Autofix the output directory
+		/** @var ConfigurationWizard $confWizModel */
+		$confWizModel = $this->container->factory->model('ConfigurationWizard')->tmpInstance();
+		$confWizModel->autofixDirectories();
+
+		// Rebase Off-site Folder Inclusion filters to use site path variables
+		/** @var \Akeeba\Backup\Admin\Model\IncludeFolders $incFoldersModel */
+		try
+		{
+			$incFoldersModel = $this->container->factory->model('IncludeFolders')->tmpInstance();
+			$incFoldersModel->rebaseFiltersToSiteDirs();
+		}
+		catch (ModelNotFound $e)
+		{
+			// Not a problem. This is expected to happen in the Core version.
+		}
 
 		// Should I apply any configuration overrides?
 		if (is_array($overrides) && !empty($overrides))

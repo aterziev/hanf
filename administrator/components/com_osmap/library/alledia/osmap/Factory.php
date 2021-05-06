@@ -3,7 +3,7 @@
  * @package   OSMap
  * @contact   www.joomlashack.com, help@joomlashack.com
  * @copyright 2007-2014 XMap - Joomla! Vargas - Guillermo Vargas. All rights reserved.
- * @copyright 2016-2020 Joomlashack.com. All rights reserved.
+ * @copyright 2016-2021 Joomlashack.com. All rights reserved.
  * @license   http://www.gnu.org/licenses/gpl.html GNU/GPL
  *
  * This file is part of OSMap.
@@ -49,18 +49,14 @@ class Factory extends Framework\Factory
     public static function getContainer()
     {
         if (empty(static::$container)) {
-            $config = array();
+            $config = [];
 
-            $container = new Container(
-                array(
-                    'configuration' => new Configuration($config)
-                )
-            );
+            $container = new Container(['configuration' => new Configuration($config)]);
 
             // Load the Service class according to the current license
             $serviceClass = '\\Alledia\\OSMap\\Services\\' . ucfirst(OSMAP_LICENSE);
 
-            $container->register(new $serviceClass);
+            $container->register(new $serviceClass());
 
             static::$container = $container;
         }

@@ -1,3 +1,13 @@
+# 03.03.2021 Version 1.3.23
+- Anpassung der Weiterleitung (redirect 301)
+
+# 05.01.2021 Version 1.3.22
+- Problem wegen &amp; im Redirect behoben
+
+# 15.10.2020 Version 1.3.21
+- REFERER-Check
+- Weitere Sprachfiles: fi-FI. Dank an Petteri Korkala
+
 # 05.08.2020 Version 1.3.20
 - Einstellung für Content-Security-Policy eingebaut (https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
 
@@ -78,7 +88,7 @@
   Bei einigen Webseiten wurde die Cookie-Meldung pro Unterseite erneut angezeigt.
 - Weitere Sprachfiles: it-IT, es-ES
   Dank an: Gabriele aka Druskus (it-IT), Sven Grossenbacher (es-ES)
-  
+
 # 24.05.2018 Version 1.3.1
 - Probleme mit Safari behoben.
 - Changelog-Ansicht

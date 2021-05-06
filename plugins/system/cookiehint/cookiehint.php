@@ -2,7 +2,7 @@
 # reDim GmbH - Norbert Bayer
 # Plugin: CookieHint
 # license GNU/GPL   www.redim.de
-# Version 1.3.19
+# Version 1.3.22
 // No direct access
 defined('JPATH_BASE') or die;
 
@@ -54,8 +54,8 @@ class plgSystemCookieHint extends JPlugin
 	private function rCHredirect()
 	{
 
-		$url = $this->getURL(array('rCH' => null));
-		$this->app->redirect($url);
+		$url = $this->getURL(array('rCH' => null),false,false);
+		$this->app->redirect($url,301);
 
 	}
 	
@@ -69,7 +69,26 @@ class plgSystemCookieHint extends JPlugin
 		    }
 	    }
 	}
-	
+
+
+	private function checkReferer() {
+
+		if(isset($_SERVER['HTTP_REFERER'])) {
+		    $a=JURI::getInstance()->getHost();
+            $b=parse_url($_SERVER['HTTP_REFERER']);
+            if(isset($b['host'])) {
+                $b=$b['host'];
+            }else{
+                $b='';
+            }
+            if($a==$b) {
+                return true;
+            }
+		}
+        return false;
+
+    }
+
 	public function onBeforeCompileHead()
 	{
 
@@ -105,34 +124,38 @@ class plgSystemCookieHint extends JPlugin
 			}
 		}
 
-		switch ($this->app->input->getINT('rCH'))
+		$rCH=$this->app->input->getINT('rCH');
+        if($rCH<>0) {
+	        $this->setNoIndex();
+          #  if($this->checkReferer()==false) {
+          #     $rCH=0;
+          #  }
+        }
+
+		switch ($rCH)
 		{
 
 			case -3:
             case 3:
 			    setcookie('reDimCookieHint', NULL, time() - 3600,'/');
-			    $this->setNoIndex();
 			    $this->rCHredirect();
                 break;
 
 			case 2:
 				$d = $this->getCookieTime();
 				setcookie('reDimCookieHint', 1, $d, '/');
-				$this->setNoIndex();
 				$this->rCHredirect();
 				break;
 			case -2:
 				$d = $this->getCookieTime();
 				#$this->cleanCookies();
 				setcookie('reDimCookieHint', -1, 0, '/');
-				$this->setNoIndex();
 				$this->rCHredirect();
 				break;
 
 			case 1:
 				$d = $this->getCookieTime();
 				setcookie('reDimCookieHint', 1, $d, '/');
-				$this->setNoIndex();
 				echo 'ok';
 				$this->app->close();
 				break;
@@ -140,7 +163,6 @@ class plgSystemCookieHint extends JPlugin
 				$d = $this->getCookieTime();
 				#$this->cleanCookies();
 				setcookie('reDimCookieHint', -1, 0, '/');
-				$this->setNoIndex();
 				echo 'ok';
 				$this->app->close();
 				break;
@@ -331,7 +353,7 @@ class plgSystemCookieHint extends JPlugin
 
 	}
 
-	private function getURL($ar = array(), $url = false)
+	private function getURL($ar = array(), $url = false,$chars=true)
 	{
 
 		if ($url)
@@ -354,6 +376,11 @@ class plgSystemCookieHint extends JPlugin
 		}
 
 		$uri->setQuery($q);
+		
+		if($chars==false) {
+			return $uri->toString();
+		}
+		
 		return htmlspecialchars($uri->toString(),ENT_COMPAT, 'UTF-8');
 
 	}

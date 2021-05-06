@@ -1,7 +1,7 @@
 <?php
 /**
  * @package   akeebabackup
- * @copyright Copyright (c)2006-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @copyright Copyright (c)2006-2021 Nicholas K. Dionysopoulos / Akeeba Ltd
  * @license   GNU General Public License version 3, or later
  */
 
@@ -19,8 +19,10 @@ use Akeeba\Backup\Admin\Model\Updates;
 use Akeeba\Engine\Factory;
 use Akeeba\Engine\Platform;
 use Exception;
-use FOF30\Container\Container;
-use FOF30\Controller\Controller;
+use FOF40\Container\Container;
+use FOF40\Controller\Controller;
+use FOF40\Factory\Exception\ModelNotFound;
+use FOF40\Utils\ViewManifestMigration;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use RuntimeException;
@@ -299,6 +301,18 @@ class ControlPanel extends Controller
 		$wizmodel = $this->container->factory->model('ConfigurationWizard')->tmpInstance();
 		$wizmodel->autofixDirectories();
 
+		// Rebase Off-site Folder Inclusion filters to use site path variables
+		/** @var \Akeeba\Backup\Admin\Model\IncludeFolders $incFoldersModel */
+		try
+		{
+			$incFoldersModel = $this->container->factory->model('IncludeFolders')->tmpInstance();
+			$incFoldersModel->rebaseFiltersToSiteDirs();
+		}
+		catch (ModelNotFound $e)
+		{
+			// Not a problem. This is expected to happen in the Core version.
+		}
+
 		// Check if we need to toggle the settings encryption feature
 		$model->checkSettingsEncryption();
 
@@ -311,6 +325,9 @@ class ControlPanel extends Controller
 		/** @var Updates $updateModel */
 		$updateModel = $this->container->factory->model('Updates')->tmpInstance();
 		$updateModel->refreshUpdateSite();
+
+		ViewManifestMigration::migrateJoomla4MenuXMLFiles($this->container);
+		ViewManifestMigration::removeJoomla3LegacyViews($this->container);
 	}
 
 }
